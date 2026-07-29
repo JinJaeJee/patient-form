@@ -48,11 +48,22 @@ export function PatientForm() {
 
   const getSnapshot = (): PatientValues => getValues() as PatientValues;
 
-  const { emitField, submit } = usePatientSession({
+  const { emitField, emitFocus, submit } = usePatientSession({
     socket,
     sessionId,
     getSnapshot,
   });
+
+  const handleFocus = (e: React.FocusEvent<HTMLFormElement>) => {
+    const name = (e.target as HTMLElement).getAttribute("name");
+    if (name) emitFocus(name as PatientField);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLFormElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+      emitFocus(null);
+    }
+  };
 
   useEffect(() => {
     const subscription = watch((values, { name }) => {
@@ -85,6 +96,8 @@ export function PatientForm() {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         noValidate
         className="space-y-8 pb-24 md:pb-0"
       >

@@ -54,8 +54,14 @@ export function SessionListItem({
         </span>
       </div>
 
-      <p className="mt-1 text-xs text-slate-400">
-        {relativeTime(session.lastActivityAt, now)}
+      <p className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+        <span>{relativeTime(session.lastActivityAt, now)}</span>
+        {session.activeField && (
+          <span className="inline-flex items-center gap-1 font-medium text-blue-600">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
+            typing…
+          </span>
+        )}
       </p>
     </button>
   );

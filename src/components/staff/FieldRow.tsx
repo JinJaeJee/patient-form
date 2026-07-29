@@ -7,9 +7,11 @@ import { displayValue } from "@/lib/format";
 export function FieldRow({
   field,
   value,
+  active = false,
 }: {
   field: FieldConfig;
   value: string | undefined;
+  active?: boolean;
 }) {
   const [flash, setFlash] = useState(false);
   const isFirst = useRef(true);
@@ -34,13 +36,21 @@ export function FieldRow({
   return (
     <div
       className={`rounded-md px-3 py-2 transition-colors ${
-        flash
-          ? "animate-field-flash motion-reduce:animate-none motion-reduce:ring-2 motion-reduce:ring-blue-400"
-          : ""
+        active
+          ? "bg-blue-50 ring-2 ring-blue-400"
+          : flash
+            ? "animate-field-flash motion-reduce:animate-none motion-reduce:ring-2 motion-reduce:ring-blue-400"
+            : ""
       }`}
     >
-      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">
-        {field.label}
+      <dt className="flex items-center justify-between gap-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+        <span>{field.label}</span>
+        {active && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold normal-case text-blue-700">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-500" />
+            editing…
+          </span>
+        )}
       </dt>
       <dd className="mt-0.5 break-words text-sm text-slate-900">
         {display ? (

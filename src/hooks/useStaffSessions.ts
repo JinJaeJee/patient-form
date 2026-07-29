@@ -6,6 +6,7 @@ import type {
   PatientSession,
   SessionUpdatePayload,
   SessionStatusPayload,
+  SessionFocusPayload,
   SessionRemovedPayload,
 } from "@/types/socket";
 
@@ -58,6 +59,17 @@ export function useStaffSessions(): {
       });
     };
 
+    const onFocus = ({ sessionId, field }: SessionFocusPayload) => {
+      setMap((prev) => {
+        const current = prev[sessionId];
+        if (!current) return prev;
+        return {
+          ...prev,
+          [sessionId]: { ...current, activeField: field },
+        };
+      });
+    };
+
     const onRemoved = ({ sessionId }: SessionRemovedPayload) => {
       setMap((prev) => {
         if (!prev[sessionId]) return prev;
@@ -71,6 +83,7 @@ export function useStaffSessions(): {
     socket.on("session:snapshot", onSnapshot);
     socket.on("session:update", onUpdate);
     socket.on("session:status", onStatus);
+    socket.on("session:focus", onFocus);
     socket.on("session:removed", onRemoved);
 
     if (socket.connected) join();
@@ -80,6 +93,7 @@ export function useStaffSessions(): {
       socket.off("session:snapshot", onSnapshot);
       socket.off("session:update", onUpdate);
       socket.off("session:status", onStatus);
+      socket.off("session:focus", onFocus);
       socket.off("session:removed", onRemoved);
     };
   }, [socket]);
@@ -98,6 +112,7 @@ function blankSession(sessionId: string): PatientSession {
     sessionId,
     values: {},
     status: "filling",
+    activeField: null,
     createdAt: ts,
     updatedAt: ts,
     lastActivityAt: ts,

@@ -18,6 +18,7 @@ function upsertOnJoin(sessionId, snapshot) {
     sessionId,
     values: { ...snapshot },
     status: "filling",
+    activeField: null,
     createdAt: ts,
     updatedAt: ts,
     lastActivityAt: ts,
@@ -37,10 +38,18 @@ function applyFieldUpdate(sessionId, field, value) {
   return session;
 }
 
+function setActiveField(sessionId, field) {
+  const session = sessions.get(sessionId);
+  if (!session) return null;
+  session.activeField = field;
+  return session;
+}
+
 function markSubmitted(sessionId) {
   const session = sessions.get(sessionId);
   if (!session) return null;
   session.status = "submitted";
+  session.activeField = null;
   session.updatedAt = now();
   return session;
 }
@@ -49,6 +58,7 @@ function markDisconnected(sessionId) {
   const session = sessions.get(sessionId);
   if (!session) return null;
   session.status = "disconnected";
+  session.activeField = null;
   session.updatedAt = now();
   return session;
 }
@@ -68,6 +78,7 @@ function all() {
 module.exports = {
   upsertOnJoin,
   applyFieldUpdate,
+  setActiveField,
   markSubmitted,
   markDisconnected,
   get,

@@ -51,6 +51,14 @@ export function usePatientSession(params: {
     [socket, sessionId],
   );
 
+  const emitFocus = useCallback(
+    (field: PatientField | null) => {
+      if (!sessionId) return;
+      socket.emit("field:focus", { sessionId, field });
+    },
+    [socket, sessionId],
+  );
+
   const submit = useCallback(() => {
     if (!sessionId) return;
     timers.current.forEach((t) => clearTimeout(t));
@@ -67,5 +75,5 @@ export function usePatientSession(params: {
     };
   }, []);
 
-  return { emitField, submit };
+  return { emitField, emitFocus, submit };
 }

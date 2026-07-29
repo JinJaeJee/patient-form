@@ -10,7 +10,7 @@ layer on one port.
   field-level change highlights.
 
 ## 🔗 Live demo
-
+Repo:  https://github.com/JinJaeJee/patient-form
 - Patient form: https://patient-form-production.up.railway.app/
 - Staff monitor: https://patient-form-production.up.railway.app/staff
 
@@ -36,6 +36,7 @@ Other scripts: `npm run build` (production build), `npm start` (run the build),
 
 ## Bonus features
 
+- **Live presence** — staff see exactly which field the patient is editing right now, in real time (a pulsing "editing…" marker on the field and a "typing…" indicator in the session list), like multiplayer cursors in Google Docs.
 - **Change highlighting** — a field flashes when its value changes (respects `prefers-reduced-motion`).
 - **Four status states** — `filling` / `inactive` / `submitted` / `disconnected`, computed on the server.
 - **Completion progress** and live "last activity" timestamps per session.

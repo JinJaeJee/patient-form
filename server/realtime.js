@@ -6,11 +6,13 @@ const STAFF_ROOM = "staff";
 const EV = {
   SESSION_JOIN: "session:join",
   FIELD_UPDATE: "field:update",
+  FIELD_FOCUS: "field:focus",
   SESSION_SUBMIT: "session:submit",
   STAFF_JOIN: "staff:join",
   SESSION_SNAPSHOT: "session:snapshot",
   SESSION_UPDATE: "session:update",
   SESSION_STATUS: "session:status",
+  SESSION_FOCUS: "session:focus",
   SESSION_REMOVED: "session:removed",
 };
 
@@ -19,6 +21,8 @@ module.exports = function attachRealtime(io) {
 
   const emitStatus = (sessionId, status) =>
     toStaff().emit(EV.SESSION_STATUS, { sessionId, status });
+  const emitFocus = (sessionId, field) =>
+    toStaff().emit(EV.SESSION_FOCUS, { sessionId, field });
   const emitRemoved = (sessionId) =>
     toStaff().emit(EV.SESSION_REMOVED, { sessionId });
   const broadcastSnapshot = () =>
@@ -57,16 +61,29 @@ module.exports = function attachRealtime(io) {
       if (session.status === "filling") emitStatus(sessionId, "filling");
     });
 
+    socket.on(EV.FIELD_FOCUS, (payload) => {
+      if (!payload || !payload.sessionId) return;
+      const { sessionId, field } = payload;
+      const session = store.setActiveField(sessionId, field ?? null);
+      if (session) emitFocus(sessionId, session.activeField);
+    });
+
     socket.on(EV.SESSION_SUBMIT, (payload) => {
       if (!payload || !payload.sessionId) return;
       const session = store.markSubmitted(payload.sessionId);
-      if (session) emitStatus(payload.sessionId, "submitted");
+      if (session) {
+        emitStatus(payload.sessionId, "submitted");
+        emitFocus(payload.sessionId, null);
+      }
     });
 
     socket.on("disconnect", () => {
       if (!ownedSessionId) return;
       const session = store.markDisconnected(ownedSessionId);
-      if (session) emitStatus(ownedSessionId, "disconnected");
+      if (session) {
+        emitStatus(ownedSessionId, "disconnected");
+        emitFocus(ownedSessionId, null);
+      }
     });
   });
 };

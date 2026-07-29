@@ -42,6 +42,7 @@ export function SessionDetail({
                     key={field.name}
                     field={field}
                     value={session.values[field.name]}
+                    active={session.activeField === field.name}
                   />
                 ))}
               </dl>
