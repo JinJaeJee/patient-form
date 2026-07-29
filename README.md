@@ -9,6 +9,14 @@ both the Next.js app and the Socket.IO realtime layer on one port.
 - **Staff monitor** (`/staff`) — live dashboard of all active sessions with
   per-session status and field-level change highlights.
 
+## 🔗 Live demo
+
+- **Patient form:** https://patient-form-production.up.railway.app/
+- **Staff monitor:** https://patient-form-production.up.railway.app/staff
+
+Open the two links in separate tabs and type in the form to watch the staff
+monitor update in real time.
+
 ---
 
 ## Stack
