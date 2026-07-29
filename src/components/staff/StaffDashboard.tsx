@@ -25,7 +25,7 @@ export function StaffDashboard() {
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-slate-900">
-            Staff Monitor
+            Staff Monitor TEST
           </h1>
           <p className="text-sm text-slate-500">
             {sessions.length} active session{sessions.length === 1 ? "" : "s"}
