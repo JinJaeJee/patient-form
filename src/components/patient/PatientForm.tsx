@@ -30,7 +30,7 @@ export function PatientForm() {
 
   const methods = useForm<PatientFormValues>({
     resolver: zodResolver(patientSchema),
-    mode: "onBlur",
+    mode: "onTouched",
     reValidateMode: "onChange",
     defaultValues,
   });
