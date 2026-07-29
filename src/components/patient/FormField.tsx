@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { FieldConfig, PatientFormValues } from "@/schema/patient";
 
@@ -27,6 +28,11 @@ export function FormField({ field }: { field: FieldConfig }) {
   const describedBy = hasError ? errorId : undefined;
 
   const registration = register(field.name);
+
+  const [maxDate, setMaxDate] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    if (field.type === "date") setMaxDate(new Date().toLocaleDateString("en-CA"));
+  }, [field.type]);
 
   return (
     <div className={field.fullWidth ? "md:col-span-2" : undefined}>
@@ -74,6 +80,7 @@ export function FormField({ field }: { field: FieldConfig }) {
           className={controlClasses(hasError)}
           placeholder={field.placeholder}
           autoComplete={field.autoComplete}
+          max={field.type === "date" ? maxDate : undefined}
           aria-invalid={hasError}
           aria-describedby={describedBy}
           {...registration}

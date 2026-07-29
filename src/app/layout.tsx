@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Patient Intake",
+  title: {
+    default: "Patient Intake",
+    template: "%s · Patient Intake",
+  },
   description: "Real-time patient intake form and staff monitor",
 };
 

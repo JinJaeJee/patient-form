@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import { PatientForm } from "@/components/patient/PatientForm";
+
+export const metadata: Metadata = {
+  title: "Patient Form",
+};
 
 export default function Home() {
   return (

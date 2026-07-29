@@ -34,7 +34,10 @@ export const patientSchema = z
       .string()
       .trim()
       .min(1, "Phone number is required")
-      .regex(THAI_PHONE_RE, "Enter a valid Thai phone (e.g. 0812345678 or +66812345678)"),
+      .refine(
+        (v) => THAI_PHONE_RE.test(v.replace(/[\s-]/g, "")),
+        "Enter a valid Thai phone (e.g. 0812345678 or +66812345678)",
+      ),
 
     email: z
       .string()
