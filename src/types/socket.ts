@@ -10,9 +10,12 @@ export type PatientField = keyof PatientFormValues;
 
 export type PatientValues = Partial<Record<PatientField, string>>;
 
+export type ValidationErrors = Partial<Record<PatientField, string>>;
+
 export interface PatientSession {
   sessionId: string;
   values: PatientValues;
+  errors: ValidationErrors;
   status: SessionStatus;
   activeField: PatientField | null;
   createdAt: number;
@@ -30,6 +33,7 @@ export const SOCKET_EVENTS = {
   SESSION_UPDATE: "session:update",
   SESSION_STATUS: "session:status",
   SESSION_FOCUS: "session:focus",
+  SESSION_VALIDITY: "session:validity",
   SESSION_REMOVED: "session:removed",
 } as const;
 
@@ -70,6 +74,11 @@ export interface SessionFocusPayload {
   field: PatientField | null;
 }
 
+export interface SessionValidityPayload {
+  sessionId: string;
+  errors: ValidationErrors;
+}
+
 export interface SessionRemovedPayload {
   sessionId: string;
 }
@@ -78,6 +87,7 @@ export interface ClientToServerEvents {
   "session:join": (payload: SessionJoinPayload) => void;
   "field:update": (payload: FieldUpdatePayload) => void;
   "field:focus": (payload: FieldFocusPayload) => void;
+  "session:validity": (payload: SessionValidityPayload) => void;
   "session:submit": (payload: SessionSubmitPayload) => void;
   "staff:join": () => void;
 }
@@ -87,5 +97,6 @@ export interface ServerToClientEvents {
   "session:update": (payload: SessionUpdatePayload) => void;
   "session:status": (payload: SessionStatusPayload) => void;
   "session:focus": (payload: SessionFocusPayload) => void;
+  "session:validity": (payload: SessionValidityPayload) => void;
   "session:removed": (payload: SessionRemovedPayload) => void;
 }

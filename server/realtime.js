@@ -13,6 +13,7 @@ const EV = {
   SESSION_UPDATE: "session:update",
   SESSION_STATUS: "session:status",
   SESSION_FOCUS: "session:focus",
+  SESSION_VALIDITY: "session:validity",
   SESSION_REMOVED: "session:removed",
 };
 
@@ -66,6 +67,17 @@ module.exports = function attachRealtime(io) {
       const { sessionId, field } = payload;
       const session = store.setActiveField(sessionId, field ?? null);
       if (session) emitFocus(sessionId, session.activeField);
+    });
+
+    socket.on(EV.SESSION_VALIDITY, (payload) => {
+      if (!payload || !payload.sessionId) return;
+      const session = store.setErrors(payload.sessionId, payload.errors);
+      if (session) {
+        toStaff().emit(EV.SESSION_VALIDITY, {
+          sessionId: payload.sessionId,
+          errors: session.errors,
+        });
+      }
     });
 
     socket.on(EV.SESSION_SUBMIT, (payload) => {

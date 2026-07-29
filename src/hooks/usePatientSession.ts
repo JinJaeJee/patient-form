@@ -1,7 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import type { PatientField, PatientValues } from "@/types/socket";
+import type {
+  PatientField,
+  PatientValues,
+  ValidationErrors,
+} from "@/types/socket";
 import type { AppSocket } from "@/lib/socket-client";
 
 const DEBOUNCE_MS = 300;
@@ -59,6 +63,14 @@ export function usePatientSession(params: {
     [socket, sessionId],
   );
 
+  const emitValidity = useCallback(
+    (errors: ValidationErrors) => {
+      if (!sessionId) return;
+      socket.emit("session:validity", { sessionId, errors });
+    },
+    [socket, sessionId],
+  );
+
   const submit = useCallback(() => {
     if (!sessionId) return;
     timers.current.forEach((t) => clearTimeout(t));
@@ -75,5 +87,5 @@ export function usePatientSession(params: {
     };
   }, []);
 
-  return { emitField, emitFocus, submit };
+  return { emitField, emitFocus, emitValidity, submit };
 }

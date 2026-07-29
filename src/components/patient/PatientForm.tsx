@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -12,7 +12,11 @@ import {
 import { getOrCreateSessionId } from "@/lib/session-id";
 import { useSocket } from "@/hooks/useSocket";
 import { usePatientSession } from "@/hooks/usePatientSession";
-import type { PatientField, PatientValues } from "@/types/socket";
+import type {
+  PatientField,
+  PatientValues,
+  ValidationErrors,
+} from "@/types/socket";
 import { ConnectionIndicator } from "@/components/ui/ConnectionIndicator";
 import { FormSection } from "./FormSection";
 import { SubmitSuccess } from "./SubmitSuccess";
@@ -39,7 +43,7 @@ export function PatientForm() {
     handleSubmit,
     watch,
     getValues,
-    formState: { isValid, isSubmitting },
+    formState: { isValid, isSubmitting, errors },
   } = methods;
 
   useEffect(() => {
@@ -48,11 +52,24 @@ export function PatientForm() {
 
   const getSnapshot = (): PatientValues => getValues() as PatientValues;
 
-  const { emitField, emitFocus, submit } = usePatientSession({
+  const { emitField, emitFocus, emitValidity, submit } = usePatientSession({
     socket,
     sessionId,
     getSnapshot,
   });
+
+  const lastErrorsRef = useRef("");
+  useEffect(() => {
+    const map: ValidationErrors = {};
+    for (const key of Object.keys(errors) as PatientField[]) {
+      const message = errors[key]?.message;
+      if (message) map[key] = message;
+    }
+    const serialized = JSON.stringify(map);
+    if (serialized === lastErrorsRef.current) return;
+    lastErrorsRef.current = serialized;
+    emitValidity(map);
+  }, [errors, emitValidity]);
 
   const handleFocus = (e: React.FocusEvent<HTMLFormElement>) => {
     const name = (e.target as HTMLElement).getAttribute("name");

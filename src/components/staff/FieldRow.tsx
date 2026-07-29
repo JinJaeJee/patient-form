@@ -8,10 +8,12 @@ export function FieldRow({
   field,
   value,
   active = false,
+  error,
 }: {
   field: FieldConfig;
   value: string | undefined;
   active?: boolean;
+  error?: string;
 }) {
   const [flash, setFlash] = useState(false);
   const isFirst = useRef(true);
@@ -33,16 +35,16 @@ export function FieldRow({
 
   const display = displayValue(field, value);
 
+  const containerClass = error
+    ? "bg-red-50 ring-2 ring-red-300"
+    : active
+      ? "bg-blue-50 ring-2 ring-blue-400"
+      : flash
+        ? "animate-field-flash motion-reduce:animate-none motion-reduce:ring-2 motion-reduce:ring-blue-400"
+        : "";
+
   return (
-    <div
-      className={`rounded-md px-3 py-2 transition-colors ${
-        active
-          ? "bg-blue-50 ring-2 ring-blue-400"
-          : flash
-            ? "animate-field-flash motion-reduce:animate-none motion-reduce:ring-2 motion-reduce:ring-blue-400"
-            : ""
-      }`}
-    >
+    <div className={`rounded-md px-3 py-2 transition-colors ${containerClass}`}>
       <dt className="flex items-center justify-between gap-2 text-xs font-medium uppercase tracking-wide text-slate-500">
         <span>{field.label}</span>
         {active && (
@@ -52,13 +54,23 @@ export function FieldRow({
           </span>
         )}
       </dt>
-      <dd className="mt-0.5 break-words text-sm text-slate-900">
+      <dd
+        className={`mt-0.5 break-words text-sm ${
+          error ? "text-red-700" : "text-slate-900"
+        }`}
+      >
         {display ? (
           display
         ) : (
           <span className="italic text-slate-400">—</span>
         )}
       </dd>
+      {error && (
+        <p className="mt-1 flex items-start gap-1 text-xs font-medium text-red-600">
+          <span aria-hidden="true">⚠</span>
+          <span>{error}</span>
+        </p>
+      )}
     </div>
   );
 }

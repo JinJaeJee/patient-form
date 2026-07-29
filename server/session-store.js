@@ -17,6 +17,7 @@ function upsertOnJoin(sessionId, snapshot) {
   const created = {
     sessionId,
     values: { ...snapshot },
+    errors: {},
     status: "filling",
     activeField: null,
     createdAt: ts,
@@ -42,6 +43,13 @@ function setActiveField(sessionId, field) {
   const session = sessions.get(sessionId);
   if (!session) return null;
   session.activeField = field;
+  return session;
+}
+
+function setErrors(sessionId, errors) {
+  const session = sessions.get(sessionId);
+  if (!session) return null;
+  session.errors = errors && typeof errors === "object" ? errors : {};
   return session;
 }
 
@@ -79,6 +87,7 @@ module.exports = {
   upsertOnJoin,
   applyFieldUpdate,
   setActiveField,
+  setErrors,
   markSubmitted,
   markDisconnected,
   get,

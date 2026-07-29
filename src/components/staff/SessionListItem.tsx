@@ -25,6 +25,7 @@ export function SessionListItem({
 }) {
   const pct = completion(session);
   const name = patientDisplayName(session.values);
+  const errorCount = Object.keys(session.errors).length;
 
   return (
     <button
@@ -39,7 +40,14 @@ export function SessionListItem({
     >
       <div className="flex items-start justify-between gap-2">
         <span className="truncate font-medium text-slate-900">{name}</span>
-        <StatusBadge status={session.status} />
+        <div className="flex shrink-0 items-center gap-1.5">
+          {errorCount > 0 && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">
+              ⚠ {errorCount}
+            </span>
+          )}
+          <StatusBadge status={session.status} />
+        </div>
       </div>
 
       <div className="mt-2 flex items-center gap-2">
