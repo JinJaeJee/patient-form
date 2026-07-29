@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-/** Re-renders on an interval so relative timestamps stay fresh. */
 export function useNow(intervalMs = 5_000): number {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {

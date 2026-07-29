@@ -22,7 +22,6 @@ export function SessionList({
   }
 
   return (
-    // Status/label changes are announced politely for screen-reader users.
     <ul className="space-y-2" aria-live="polite">
       {sessions.map((session) => (
         <li key={session.sessionId}>

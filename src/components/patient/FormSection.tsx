@@ -1,10 +1,6 @@
 import type { FieldConfig, SectionConfig } from "@/schema/patient";
 import { FormField } from "./FormField";
 
-/**
- * A titled group of fields laid out in the responsive grid: single column on
- * mobile, two columns at md+. Purely presentational.
- */
 export function FormSection({
   section,
   fields,

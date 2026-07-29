@@ -15,11 +15,6 @@ function controlClasses(hasError: boolean): string {
   }`;
 }
 
-/**
- * Renders one input from a schema entry — label, control, error, ARIA wiring.
- * The control is chosen from the field's declared `type`, so adding a field to
- * PATIENT_FIELDS is enough to make it appear here.
- */
 export function FormField({ field }: { field: FieldConfig }) {
   const {
     register,

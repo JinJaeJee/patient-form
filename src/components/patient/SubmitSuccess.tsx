@@ -1,4 +1,3 @@
-/** Post-submit confirmation state, replacing the form. */
 export function SubmitSuccess({ firstName }: { firstName?: string }) {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">

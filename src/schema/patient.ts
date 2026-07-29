@@ -1,16 +1,5 @@
 import { z } from "zod";
 
-// ---------------------------------------------------------------------------
-// Single source of truth.
-//
-// This module owns BOTH the validation rules (the Zod schema) AND the field
-// list / presentation metadata (labels, input types, select options, section
-// grouping, order). The patient form and the staff detail panel both render
-// from `PATIENT_FIELDS`, so a field can never exist on one side and be missing
-// on the other.
-// ---------------------------------------------------------------------------
-
-// Thai mobile numbers: local form `0812345678` or international `+66812345678`.
 const THAI_PHONE_RE = /^(0\d{9}|\+66\d{9})$/;
 
 export const GENDER_OPTIONS = [
@@ -67,8 +56,6 @@ export const patientSchema = z
 
     religion: z.string().trim().max(100).optional(),
   })
-  // The emergency contact is an optional pair: if one half is filled, the other
-  // becomes required so staff aren't left with a name and no way to place it.
   .superRefine((val, ctx) => {
     const hasName = !!val.emergencyContactName?.trim();
     const hasRel = !!val.emergencyContactRelationship?.trim();
@@ -90,10 +77,6 @@ export const patientSchema = z
 
 export type PatientFormValues = z.infer<typeof patientSchema>;
 
-// ---------------------------------------------------------------------------
-// Field presentation metadata
-// ---------------------------------------------------------------------------
-
 export type FieldType = "text" | "date" | "select" | "tel" | "email" | "textarea";
 export type FieldSection = "identity" | "contact" | "background" | "emergency";
 
@@ -111,7 +94,6 @@ export interface FieldConfig {
   readonly placeholder?: string;
   readonly autoComplete?: string;
   readonly options?: readonly SelectOption[];
-  /** Span both columns of the md+ grid (used for wide inputs like address). */
   readonly fullWidth?: boolean;
 }
 
@@ -129,7 +111,6 @@ export const PATIENT_SECTIONS: readonly SectionConfig[] = [
 ] as const;
 
 export const PATIENT_FIELDS: readonly FieldConfig[] = [
-  // Identity
   {
     name: "firstName",
     label: "First name",
@@ -170,7 +151,6 @@ export const PATIENT_FIELDS: readonly FieldConfig[] = [
     required: true,
     options: GENDER_OPTIONS,
   },
-  // Contact
   {
     name: "phone",
     label: "Phone",
@@ -198,7 +178,6 @@ export const PATIENT_FIELDS: readonly FieldConfig[] = [
     fullWidth: true,
     autoComplete: "street-address",
   },
-  // Background
   {
     name: "preferredLanguage",
     label: "Preferred language",
@@ -224,7 +203,6 @@ export const PATIENT_FIELDS: readonly FieldConfig[] = [
     section: "background",
     required: false,
   },
-  // Emergency contact
   {
     name: "emergencyContactName",
     label: "Contact name",
@@ -243,10 +221,8 @@ export const PATIENT_FIELDS: readonly FieldConfig[] = [
   },
 ] as const;
 
-/** Ordered list of field names — used by the socket layer and staff view. */
 export const PATIENT_FIELD_NAMES = PATIENT_FIELDS.map((f) => f.name);
 
-/** Empty form state, derived from the field list so it never drifts. */
 export const EMPTY_PATIENT_VALUES: Record<keyof PatientFormValues, string> =
   PATIENT_FIELDS.reduce(
     (acc, f) => {

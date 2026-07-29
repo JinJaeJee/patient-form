@@ -11,10 +11,6 @@ const STYLE: Record<ConnectionState, { label: string; dot: string; text: string 
     offline: { label: "Offline", dot: "bg-slate-400", text: "text-slate-500" },
   };
 
-/**
- * Persistent connection status. It matters on both sides: a disconnected patient
- * is invisible to staff, and a frozen dashboard looks identical to an empty clinic.
- */
 export function ConnectionIndicator({ status }: { status: ConnectionState }) {
   const s = STYLE[status];
   return (

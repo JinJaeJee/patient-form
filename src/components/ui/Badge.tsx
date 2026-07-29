@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-/** Small styling primitive underneath StatusBadge and similar chips. */
 export function Badge({
   children,
   className = "",

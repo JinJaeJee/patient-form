@@ -7,17 +7,11 @@ import { ConnectionIndicator } from "@/components/ui/ConnectionIndicator";
 import { SessionList } from "./SessionList";
 import { SessionDetail } from "./SessionDetail";
 
-/**
- * Route-level container. Holds selected-session state and switches between the
- * stacked (mobile) and split-pane (lg+) layouts.
- */
 export function StaffDashboard() {
   const { sessions, status } = useStaffSessions();
   const now = useNow(5_000);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // Keep selection valid as sessions come and go; default to the first one on
-  // large screens where the detail pane is always visible.
   useEffect(() => {
     if (selectedId && !sessions.some((s) => s.sessionId === selectedId)) {
       setSelectedId(null);
@@ -41,7 +35,6 @@ export function StaffDashboard() {
       </header>
 
       <div className="lg:flex lg:gap-6">
-        {/* Master list. On mobile it hides once a session is selected. */}
         <aside
           className={`lg:w-80 lg:shrink-0 ${
             selected ? "hidden lg:block" : "block"
@@ -55,7 +48,6 @@ export function StaffDashboard() {
           />
         </aside>
 
-        {/* Detail pane. On mobile it replaces the list when a session is chosen. */}
         <section
           className={`min-w-0 flex-1 ${selected ? "block" : "hidden lg:block"}`}
         >

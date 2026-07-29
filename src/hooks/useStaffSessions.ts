@@ -9,12 +9,6 @@ import type {
   SessionRemovedPayload,
 } from "@/types/socket";
 
-/**
- * Owns the server -> staff side: joins the staff room, then reduces the
- * snapshot/update/status/removed stream into a session map. Reconnect re-emits
- * staff:join so the dashboard rebuilds from server truth rather than replaying
- * missed deltas.
- */
 export function useStaffSessions(): {
   sessions: PatientSession[];
   status: ConnectionState;
@@ -90,7 +84,6 @@ export function useStaffSessions(): {
     };
   }, [socket]);
 
-  // Sorted by most recent activity, newest first.
   const sessions = useMemo(
     () => Object.values(map).sort((a, b) => b.lastActivityAt - a.lastActivityAt),
     [map],

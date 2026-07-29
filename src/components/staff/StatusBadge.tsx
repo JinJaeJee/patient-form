@@ -1,8 +1,6 @@
 import type { SessionStatus } from "@/types/socket";
 import { Badge } from "@/components/ui/Badge";
 
-// Single place where status presentation (colour + label) is defined. Status is
-// communicated redundantly by colour AND text so it never relies on colour alone.
 const STATUS_STYLE: Record<
   SessionStatus,
   { label: string; dot: string; badge: string }

@@ -7,10 +7,6 @@ import { patientDisplayName, relativeTime } from "@/lib/format";
 import { StatusBadge } from "./StatusBadge";
 import { FieldRow } from "./FieldRow";
 
-/**
- * Full record for the selected session, rendered from the SAME schema array the
- * patient form uses — so the two can never drift apart.
- */
 export function SessionDetail({
   session,
   now,

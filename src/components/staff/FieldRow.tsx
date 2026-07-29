@@ -4,14 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import type { FieldConfig } from "@/schema/patient";
 import { displayValue } from "@/lib/format";
 
-/**
- * One label/value pair in the staff detail panel. Owns the change-highlight
- * effect: when the value changes it flashes briefly so staff notice the update.
- * The first render (and remounts when switching sessions) never flashes.
- *
- * Under prefers-reduced-motion the flash animation is suppressed and a ring is
- * shown instead.
- */
 export function FieldRow({
   field,
   value,

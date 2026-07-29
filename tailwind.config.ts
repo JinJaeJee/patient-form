@@ -6,7 +6,7 @@ const config: Config = {
     extend: {
       keyframes: {
         "field-flash": {
-          "0%": { backgroundColor: "rgb(219 234 254)" }, // blue-100
+          "0%": { backgroundColor: "rgb(219 234 254)" },
           "100%": { backgroundColor: "transparent" },
         },
       },

@@ -5,10 +5,6 @@ import { getSocket, type AppSocket } from "@/lib/socket-client";
 
 export type ConnectionState = "connected" | "reconnecting" | "offline";
 
-/**
- * Owns connection lifecycle and nothing else. Domain hooks
- * (usePatientSession, useStaffSessions) build on top of this.
- */
 export function useSocket(): { socket: AppSocket; status: ConnectionState } {
   const socketRef = useRef<AppSocket | null>(null);
   if (!socketRef.current) socketRef.current = getSocket();

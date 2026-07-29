@@ -17,9 +17,6 @@ import { ConnectionIndicator } from "@/components/ui/ConnectionIndicator";
 import { FormSection } from "./FormSection";
 import { SubmitSuccess } from "./SubmitSuccess";
 
-// Default values keyed to the field list — every registered field starts as a
-// controlled empty string so react-hook-form never warns about uncontrolled
-// inputs and reset() behaves predictably.
 const defaultValues = PATIENT_FIELDS.reduce((acc, f) => {
   acc[f.name] = "";
   return acc;
@@ -27,16 +24,14 @@ const defaultValues = PATIENT_FIELDS.reduce((acc, f) => {
 
 export function PatientForm() {
   const [submitted, setSubmitted] = useState(false);
-  // Established on mount and persisted in sessionStorage so a refresh resumes
-  // the same session. Empty on the server render; filled after hydration.
   const [sessionId, setSessionId] = useState("");
 
   const { socket, status } = useSocket();
 
   const methods = useForm<PatientFormValues>({
     resolver: zodResolver(patientSchema),
-    mode: "onBlur", // validate on blur…
-    reValidateMode: "onChange", // …then keep errors fresh as the user fixes them
+    mode: "onBlur",
+    reValidateMode: "onChange",
     defaultValues,
   });
 
@@ -51,7 +46,6 @@ export function PatientForm() {
     setSessionId(getOrCreateSessionId());
   }, []);
 
-  // Snapshot getter for join/reconnect — the whole current form as plain strings.
   const getSnapshot = (): PatientValues => getValues() as PatientValues;
 
   const { emitField, submit } = usePatientSession({
@@ -60,8 +54,6 @@ export function PatientForm() {
     getSnapshot,
   });
 
-  // Bridge react-hook-form changes into debounced field:update emits. No
-  // socket.emit lives in JSX — the hook owns the transport.
   useEffect(() => {
     const subscription = watch((values, { name }) => {
       if (!name) return;
@@ -104,7 +96,6 @@ export function PatientForm() {
           <FormSection key={section.id} section={section} fields={fields} />
         ))}
 
-        {/* Sticky on mobile so the action is always reachable; inline on desktop. */}
         <div className="fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white/90 p-4 backdrop-blur md:static md:border-0 md:bg-transparent md:p-0">
           <div className="mx-auto flex max-w-3xl items-center justify-end gap-3">
             <button
